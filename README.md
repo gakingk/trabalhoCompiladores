@@ -3,21 +3,15 @@ Construindo um analisador léxico
 
 pra compilar:
 
-#bison
+bison -d parser.y
 
-bison -d syn.y
+flex trabalho.lex
 
-#flex
+gcc -o compilador.flex.o -c lex.yy.c 
 
-flex input.lex
+gcc -o compilador.y.o -c parser.tab.c 
 
-#compilação
-
-gcc -c lex.yy.c -o comp.flex.o -lfl
-
-gcc -c syn.tab.c -o comp.y.o -lfl
-
-gcc -o comp comp.flex.o comp.y.o -lfl -lm
+gcc -o compilador compilador.flex.o compilador.y.o -lfl
 
 
     ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
