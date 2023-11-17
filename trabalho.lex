@@ -7,7 +7,7 @@ DSIGN "++"|"--"|"**"
 EOU "&&"|"||"
 VAR {CHAR}[_a-zA-Z0-9]*
 INV {NUM}[_a-zA-Z]*
-ATRIB =
+ATRIB "="
 SC ;
 ABREPAR "("
 FECHAPAR ")"
@@ -20,7 +20,9 @@ COMM ","|"."
 
 %{
 #include <stdio.h>
-#include "parser.h"
+#include "parser.tab.h"
+int linhas=0;
+int erros=0;
 %}
 
     //CHAR: caracteres de a até z e A até Z (CHARacter)
@@ -37,16 +39,15 @@ COMM ","|"."
 
 %%
 
-[ /t/n/r]
-\n                  {num_linha++;}
-for                 {printf("palavra reservada(%s)", yytext); return FOR;}
+[ \t\r]
+\n                  {linhas++;}
+while               {printf("palavra reservada(%s)", yytext); return WHILE;}
 main                {printf("palavra reservada(%s)", yytext); return MAIN;}
 if                  {printf("palavra reservada(%s)", yytext); return IF;}
 else                {printf("palavra reservada(%s)", yytext); return ELSE;}
 int                 {printf("int(%s)\n", yytext); return INT;}
 float               {printf("float(%s)\n", yytext); return FLOAT;}
 double              {printf("double(%s)\n", yytext); return DOUBLE;}
-long                {printf("long(%s)\n", yytext); return LONG;}
 {SC}                {printf("\tfim de linha(%s)\n", yytext); return SC;}
 {ATRIB}             {printf(" equivale a(%s) ", yytext); return ATRIB;}
 😋                  {printf("\nentrada invalida(%s) ", yytext); return INV;}
@@ -75,6 +76,7 @@ long                {printf("long(%s)\n", yytext); return LONG;}
     //o . em {NUM}+"."{NUM}+ é pra simular um float
     //.+ é pra caso a entrada nao se encaixe em nenhum dos casos
 
+/*
 int yywrap(){}
 FILE *teste;
 int main(){
@@ -92,6 +94,7 @@ int main(){
 system("pause");
 return(0);
 }
+*/
 
     //yywrap: função que consolida as regras postas acima
     //yyin = teste: fazendo a entrada pro yylex ser o texto do arquivo

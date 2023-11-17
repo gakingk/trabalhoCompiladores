@@ -4,13 +4,15 @@
 #include <string.h>
 extern int linhas;
 extern int erros;
+int yylex();                                                                 
+int yyerror();
 %}
 
 %token NUM SIGN DSIGN VAR INV 
-%token INT FLOAT DOUBLE LONG
+%token INT FLOAT DOUBLE
 %token ATRIB SC COMP EOU COMM
 %token ABREPAR FECHAPAR ABRECOL FECHACOL ABRECHAVE FECHACHAVE
-%token MAIN FOR IF ELSE
+%token MAIN WHILE IF ELSE
 %start Programa_principal
 
 //boa parte do codigo da seção abaixo foi reaproveitado dos slides
@@ -18,29 +20,52 @@ extern int erros;
 %%
 Programa_principal: 
     MAIN ABREPAR FECHAPAR ABRECHAVE Comandos FECHACHAVE | 
-    error{yyerror("",linhas); return 1;};
-Comandos : Comando Comandos | Comando;
-Comando : 
-    DECLARACAO | ATRIBUICAO | FUNCAOFOR | FUNCAOIF | 
-    error{yyerror("",linhas); return 1;};
-DECLARACAO : Tipo Decl COMM;
-Tipo : INT | FLOAT | DOUBLE | LONG;
-Decl : Lista_var;
-Atribui_valor : ATRIB NUM | ;
-Atribuicao : VAR ATRIB Exp COMM;
-Exp : INT x | FLOAT x | NUM x | VAR x ;
-x : SIGN Exp | ;
-Lista_var : 
-    VAR ATRIBUICAO COMM Lista_var | VAR ATRIBUICAO;
-ATRIBUICAO: 
-    VAR ATRIB Exp COMM;
-FUNCAOFOR: 
-    FOR ABREPAR VAR ATRIB NUM SC VAR COMP VAR SC VAR DSIGN FECHAPAR;
+    error{yyerror("",linhas);};
+Comandos: 
+	Comando Comandos | Comando |;
+Comando: 
+    Declaracao | Atribuicao | FUNCAOWHILE | FUNCAOIF | 
+    error{yyerror("",linhas);};
+
+Declaracao: 
+	Tipo Decl SC;
+
+Tipo: 
+	INT | FLOAT | DOUBLE;
+
+Decl: 
+	LISTA_VAR ;
+
+LISTA_VAR: 
+	VAR Atribui_valor COMM LISTA_VAR | VAR Atribui_valor;
+
+Atribui_valor: 
+	ATRIB SINAL NUM | ;
+
+Atribuicao: 
+	VAR ATRIB SINAL Exp SC ;
+
+Exp: 
+	NUM x | VAR x;
+
+//a partir dessa linha nao foi pego dos slides
+x: 
+	SINAL Exp | ;
+
+SINAL: 
+	SIGN|;
+
+FUNCAOWHILE: 
+    WHILE ABREPAR IFARG FECHAPAR ABRECHAVE Comandos FECHACHAVE; 
+
 FUNCAOIF: 
-    IF ABREPAR VAR COMP VAR FECHAPAR | 
-    IF ABREPAR VAR COMP NUM FECHAPAR ;
+    IF ABREPAR IFARG FECHAPAR ABRECHAVE Comandos FECHACHAVE;
 
+IFARG:
+	VAR COMP VAR | VAR COMP VAR IFARG2 | VAR COMP NUM | VAR COMP NUM IFARG2| VAR;
 
+IFARG2:
+	EOU IFARG;
 %%
 
 extern FILE *yyin;
@@ -59,27 +84,16 @@ return erros;
 
 int main (int argc, char **argv )
 {
-	if(argc <= 1)
-	{
-		yyin = stdin;
-	}
-	else if(argc > 2)
-	{
-		printf("Argumentos demais");
-		return 1;
-	}
-	else
-		yyin = fopen(argv[1], "r");
+	yyin = fopen(argv[1], "r");
 
-	if(yyin == NULL)
-	{
-		printf("erro ao abrir o arquivo!!\n");
+	if(yyin == NULL){
+		printf("\nFalha ao abrir o arquivo\n");
 		return 1;
 	}
 	do{
 		yyparse();
 	}while(!feof(yyin));
 
-	if(!errors)
-		printf("Análise concluída com sucesso!\n");
+	if(!erros)
+		printf("\nAnálise concluída com sucesso\n");
 }
