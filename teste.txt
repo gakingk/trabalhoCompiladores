@@ -1,0 +1,21 @@
+main(){
+    float c=3.2; 
+    int a;
+    float b=2.2; 
+    double n=-49;
+    n=2;
+    b=-4.5;
+    ab=a*b;
+
+    if(a==b && b<a || a>b){
+        if(k){
+            while(b>=2){
+                while(j){
+                    i=i+j;
+                }
+                c=a-b;
+                double c, z=10, b;
+            }
+        }
+    }
+}
