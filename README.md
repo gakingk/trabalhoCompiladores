@@ -1,7 +1,11 @@
 # trabalhoCompiladores
 Construindo um analisador léxico 
 
-pra compilar:
+pra compilar no windows, abre o wsl e instala o bison com:
+
+    sudo apt update && sudo apt install flex bison
+
+aí abre o wsl no diretório que os arquivos estão e roda esses comandos nele:
 
 bison -d parser.y
 
