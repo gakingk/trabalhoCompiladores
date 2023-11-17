@@ -49,27 +49,28 @@ Exp:
 	NUM x | VAR x;
 
 //a partir dessa linha nao foi pego dos slides
-x: 
+x:
 	SINAL Exp | ;
 
-SINAL: 
+SINAL: //SINAL é usado pra dar a opção entre positivos e negativos
 	SIGN|;
 
-FUNCAOWHILE: 
+FUNCAOWHILE: //recicla o ifarg do if porque a sintaxe é a mesma
     WHILE ABREPAR IFARG FECHAPAR ABRECHAVE Comandos FECHACHAVE; 
 
-FUNCAOIF: 
+FUNCAOIF: //esqueleto da função if
     IF ABREPAR IFARG FECHAPAR ABRECHAVE Comandos FECHACHAVE;
 
-IFARG:
+IFARG:	//condições do if
 	VAR COMP VAR | VAR COMP VAR IFARG2 | VAR COMP NUM | VAR COMP NUM IFARG2| VAR;
 
-IFARG2:
+IFARG2: //usado pra um if com multiplas condições
 	EOU IFARG;
 %%
 
-extern FILE *yyin;
+FILE *yyin;
 
+//função pra erro tirada dos slides
 int yyerror(char *str, int num_linha) {
     if(strcmp(str,"syntax error")==0){
         erros++;
@@ -82,16 +83,15 @@ int yyerror(char *str, int num_linha) {
 return erros;
 }
 
-int main (int argc, char **argv )
-{
-	yyin = fopen(argv[1], "r");
+int main (int argc, char **argv ){
+	yyin = fopen(argv[1], "r"); //usando o argumento como nome do arquivo
 
-	if(yyin == NULL){
+	if(yyin == NULL){	//caso nao seja possivel abrir o arquivo
 		printf("\nFalha ao abrir o arquivo\n");
 		return 1;
 	}
 	do{
-		yyparse();
+		yyparse();	//analisa o arquivo com as regras postas
 	}while(!feof(yyin));
 
 	if(!erros)

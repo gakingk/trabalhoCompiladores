@@ -29,6 +29,7 @@ int erros=0;
     //NUM: NUMeros de 0 até 9
     //SIGN: operadores matematicos (SIGNal)
     //DSIGN: operadores matematicos duplos, pra somatorio e etc
+    //EOU: operadores E (&&) e OU (||)
     //VAR: nomes de VARiáveis
     //INV: nomes INVálidos de variáveis
     //ATRIB: sinal de ATRIBuição
@@ -77,6 +78,9 @@ double              {printf("double(%s)\n", yytext); return DOUBLE;}
     //.+ é pra caso a entrada nao se encaixe em nenhum dos casos
 
 /*
+
+    //agora a main tá no arquivo .y
+
 int yywrap(){}
 FILE *teste;
 int main(){
