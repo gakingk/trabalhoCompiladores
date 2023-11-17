@@ -1,3 +1,5 @@
+    //Código por: Gabriel Inagaki Marcelino e Luis Felipe Shimabucoro Furilli
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
